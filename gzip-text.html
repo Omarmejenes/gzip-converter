@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Convertidor Gzip - Números a Bytes</title>
-    <!-- Bootstrap 5 CSS -->
+    <title>Descomprimir Gzip desde Texto</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Pako library for gzip decompression -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako.min.js"></script>
 </head>
 <body>
@@ -15,37 +13,33 @@
             <div class="col-md-8">
                 <div class="card shadow">
                     <div class="card-header bg-primary text-white">
-                        <h4 class="mb-0">🗜️ Convertidor Gzip - Números a Bytes</h4>
+                        <h4 class="mb-0">🗜️ Descomprimir Gzip desde Texto Base64</h4>
                     </div>
                     <div class="card-body">
-                        <form id="gzipForm">
+                        <form id="gzipTextForm">
                             <div class="mb-3">
-                                <label for="numbersInput" class="form-label">
-                                    <strong>Cadena de números separados por comas:</strong>
+                                <label for="gzipTextInput" class="form-label">
+                                    <strong>Texto comprimido en Gzip (Base64):</strong>
                                 </label>
                                 <textarea 
                                     class="form-control" 
-                                    id="numbersInput" 
+                                    id="gzipTextInput" 
                                     rows="5" 
-                                    placeholder="Ejemplo: 31,139,8,0,0,0,0,0,0,255,77,205,201,10,194,48,16..."
-                                    required>
-                                </textarea>
+                                    placeholder="Ejemplo: H4sIAAAAAAA..."
+                                    required></textarea>
                                 <div class="form-text">
-                                    Ingresa los números separados por comas que representan bytes comprimidos con gzip.
+                                    Ingresa el texto comprimido en Gzip codificado en Base64.
                                 </div>
                             </div>
-                            
                             <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                                 <button type="submit" class="btn btn-primary btn-lg me-md-2">
-                                    <i class="bi bi-arrow-repeat"></i> Convertir y Descomprimir
+                                    <i class="bi bi-arrow-repeat"></i> Descomprimir
                                 </button>
-                                <button type="button" class="btn btn-outline-secondary btn-lg" onclick="loadExample()">
+                                <button type="button" class="btn btn-outline-secondary btn-lg" onclick="loadTextExample()">
                                     <i class="bi bi-file-text"></i> Cargar Ejemplo
                                 </button>
                             </div>
                         </form>
-
-                        <!-- Área de resultados -->
                         <div id="resultArea" class="mt-4" style="display: none;">
                             <hr>
                             <h5 class="text-success">📋 Resultado:</h5>
@@ -58,8 +52,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Área de errores -->
                         <div id="errorArea" class="mt-4" style="display: none;">
                             <hr>
                             <h5 class="text-danger">❌ Error:</h5>
@@ -67,12 +59,9 @@
                                 <pre id="errorText" class="mb-0"></pre>
                             </div>
                         </div>
-
-                        <!-- Segundo formulario: Comprimir texto a gzip -->
                         <div class="mt-5">
                             <hr class="my-4">
-                            <h5 class="text-primary">🗜️ Comprimir Texto a Gzip</h5>
-                            
+                            <h5 class="text-primary">🗜️ Comprimir Texto a Gzip (Base64)</h5>
                             <form id="compressForm">
                                 <div class="mb-3">
                                     <label for="textInput" class="form-label">
@@ -83,37 +72,32 @@
                                         id="textInput" 
                                         rows="5" 
                                         placeholder="Ingresa el texto que deseas comprimir con gzip..."
-                                        required>
-                                    </textarea>
+                                        required></textarea>
                                     <div class="form-text">
                                         Ingresa cualquier texto que quieras comprimir usando gzip.
                                     </div>
                                 </div>
-                                
                                 <div class="d-grid gap-2 d-md-flex justify-content-md-center">
                                     <button type="submit" class="btn btn-success btn-lg me-md-2">
-                                        <i class="bi bi-arrow-down"></i> Comprimir a Gzip
+                                        <i class="bi bi-arrow-down"></i> Comprimir a Gzip (Base64)
                                     </button>
-                                    <button type="button" class="btn btn-outline-secondary btn-lg" onclick="loadTextExample()">
+                                    <button type="button" class="btn btn-outline-secondary btn-lg" onclick="loadTextExampleCompress()">
                                         <i class="bi bi-file-text"></i> Ejemplo de Texto
                                     </button>
                                 </div>
                             </form>
-
-                            <!-- Área de resultados para compresión -->
                             <div id="compressResultArea" class="mt-4" style="display: none;">
                                 <hr>
                                 <h5 class="text-success">📋 Resultado Comprimido:</h5>
                                 <div class="alert alert-info" role="alert">
                                     <div class="mb-2">
-                                        <strong>Números separados por comas:</strong>
+                                        <strong>Texto Base64:</strong>
                                     </div>
                                     <textarea 
                                         class="form-control" 
                                         id="compressResultText" 
                                         rows="5" 
-                                        readonly>
-                                    </textarea>
+                                        readonly></textarea>
                                     <div class="mt-2">
                                         <button type="button" class="btn btn-sm btn-outline-primary" onclick="copyToClipboard()">
                                             📋 Copiar al Portapapeles
@@ -129,8 +113,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Área de errores para compresión -->
                             <div id="compressErrorArea" class="mt-4" style="display: none;">
                                 <hr>
                                 <h5 class="text-danger">❌ Error al comprimir:</h5>
@@ -139,18 +121,16 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Información adicional -->
                         <div class="mt-4">
                             <div class="card bg-light">
                                 <div class="card-body">
                                     <h6 class="card-title">ℹ️ Información:</h6>
                                     <p class="card-text small mb-0">
-                                        Esta herramienta permite comprimir y descomprimir datos usando gzip:
-                                        <br>• <strong>Descomprimir:</strong> Convierte números separados por comas a texto original
-                                        <br>• <strong>Comprimir:</strong> Convierte texto a números separados por comas (gzip comprimido)
+                                        Esta herramienta permite comprimir y descomprimir datos usando gzip en formato texto Base64:
+                                        <br>• <strong>Descomprimir:</strong> Convierte texto Base64 (gzip) a texto original
+                                        <br>• <strong>Comprimir:</strong> Convierte texto a Base64 (gzip comprimido)
                                     </p>
-                                    <a href="gzip-text.html" class="btn btn-link p-0 mt-2">Ir a descomprimir desde texto Gzip (Base64) →</a>
+                                    <a href="index.html" class="btn btn-link p-0 mt-2">← Volver a Números a Bytes</a>
                                 </div>
                             </div>
                         </div>
@@ -159,195 +139,122 @@
             </div>
         </div>
     </div>
-
-    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
-        document.getElementById('gzipForm').addEventListener('submit', function(e) {
+        function base64ToUint8Array(base64) {
+            const binary = atob(base64);
+            const len = binary.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binary.charCodeAt(i);
+            }
+            return bytes;
+        }
+        function uint8ArrayToBase64(bytes) {
+            let binary = '';
+            for (let i = 0; i < bytes.length; i++) {
+                binary += String.fromCharCode(bytes[i]);
+            }
+            return btoa(binary);
+        }
+        document.getElementById('gzipTextForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            // Obtener el valor del input
-            const numbersString = document.getElementById('numbersInput').value.trim();
-            
-            // Ocultar áreas de resultado y error
+            const base64String = document.getElementById('gzipTextInput').value.trim();
             document.getElementById('resultArea').style.display = 'none';
             document.getElementById('errorArea').style.display = 'none';
-            
             try {
-                // Validar que no esté vacío
-                if (!numbersString) {
-                    throw new Error('Por favor, ingresa una cadena de números.');
-                }
-                
-                // Convertir la cadena de números a un array de bytes
-                const numberArray = numbersString.split(',').map(num => {
-                    const parsed = parseInt(num.trim());
-                    if (isNaN(parsed) || parsed < 0 || parsed > 255) {
-                        throw new Error(`Número inválido: "${num.trim()}". Los números deben estar entre 0 y 255.`);
-                    }
-                    return parsed;
-                });
-                
-                // Crear un Uint8Array con los bytes
-                const byteArray = new Uint8Array(numberArray);
-                
-                // Intentar descomprimir con gzip usando pako
+                if (!base64String) throw new Error('Por favor, ingresa un texto comprimido en Base64.');
+                const byteArray = base64ToUint8Array(base64String);
                 const decompressed = pako.inflate(byteArray, { to: 'string' });
-                
-                // Mostrar el resultado
                 document.getElementById('resultText').textContent = decompressed;
                 document.getElementById('resultArea').style.display = 'block';
-                
-                // Scroll hacia el resultado
                 document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
-                
             } catch (error) {
-                // Mostrar el error
                 document.getElementById('errorText').textContent = error.message;
                 document.getElementById('errorArea').style.display = 'block';
-                
-                // Scroll hacia el error
                 document.getElementById('errorArea').scrollIntoView({ behavior: 'smooth' });
             }
         });
-        
-        // Manejo del formulario de compresión
         document.getElementById('compressForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            // Obtener el valor del input
             const textToCompress = document.getElementById('textInput').value.trim();
-            
-            // Ocultar áreas de resultado y error
             document.getElementById('compressResultArea').style.display = 'none';
             document.getElementById('compressErrorArea').style.display = 'none';
-            
             try {
-                // Validar que no esté vacío
-                if (!textToCompress) {
-                    throw new Error('Por favor, ingresa un texto para comprimir.');
-                }
-                
-                // Comprimir el texto usando pako
+                if (!textToCompress) throw new Error('Por favor, ingresa un texto para comprimir.');
                 const compressed = pako.gzip(textToCompress);
-                
-                // Convertir el array de bytes a números separados por comas
-                const numbersArray = Array.from(compressed);
-                const numbersString = numbersArray.join(',');
-                
-                // Mostrar el resultado
-                document.getElementById('compressResultText').value = numbersString;
+                const base64String = uint8ArrayToBase64(compressed);
+                document.getElementById('compressResultText').value = base64String;
                 document.getElementById('compressResultArea').style.display = 'block';
-                
-                // Mostrar estadísticas
                 const originalSize = new TextEncoder().encode(textToCompress).length;
                 const compressedSize = compressed.length;
                 const compressionRatio = ((1 - compressedSize / originalSize) * 100).toFixed(1);
-                
                 document.getElementById('originalSize').textContent = originalSize;
                 document.getElementById('compressedSize').textContent = compressedSize;
                 document.getElementById('compressionRatio').textContent = compressionRatio;
-                
-                // Scroll hacia el resultado
                 document.getElementById('compressResultArea').scrollIntoView({ behavior: 'smooth' });
-                
             } catch (error) {
-                // Mostrar el error
                 document.getElementById('compressErrorText').textContent = error.message;
                 document.getElementById('compressErrorArea').style.display = 'block';
-                
-                // Scroll hacia el error
                 document.getElementById('compressErrorArea').scrollIntoView({ behavior: 'smooth' });
             }
         });
-        
-        // Función para copiar al portapapeles (compresión)
         function copyToClipboard() {
             const resultText = document.getElementById('compressResultText');
             resultText.select();
             document.execCommand('copy');
-            
-            // Feedback visual
             const button = event.target;
             const originalText = button.innerHTML;
             button.innerHTML = '✅ Copiado!';
             button.classList.remove('btn-outline-primary');
             button.classList.add('btn-success');
-            
             setTimeout(() => {
                 button.innerHTML = originalText;
                 button.classList.remove('btn-success');
                 button.classList.add('btn-outline-primary');
             }, 2000);
         }
-
-        // Función para copiar el resultado de descompresión al portapapeles
         function copyDecompressResult() {
             const resultText = document.getElementById('resultText');
-            // Crear un textarea temporal para copiar el contenido del <pre>
             const tempTextarea = document.createElement('textarea');
             tempTextarea.value = resultText.textContent;
             document.body.appendChild(tempTextarea);
             tempTextarea.select();
             document.execCommand('copy');
             document.body.removeChild(tempTextarea);
-
-            // Feedback visual
             const button = event.target;
             const originalText = button.innerHTML;
             button.innerHTML = '✅ Copiado!';
             button.classList.remove('btn-outline-primary');
             button.classList.add('btn-success');
-
             setTimeout(() => {
                 button.innerHTML = originalText;
                 button.classList.remove('btn-success');
                 button.classList.add('btn-outline-primary');
             }, 2000);
         }
-        
-        // Función para mover el resultado al campo de descompresión
         function moveToDecompress() {
-            const compressedNumbers = document.getElementById('compressResultText').value;
-            document.getElementById('numbersInput').value = compressedNumbers;
-            
-            // Scroll hacia arriba
-            document.getElementById('numbersInput').scrollIntoView({ behavior: 'smooth' });
-            
-            // Feedback visual
+            const compressedText = document.getElementById('compressResultText').value;
+            document.getElementById('gzipTextInput').value = compressedText;
+            document.getElementById('gzipTextInput').scrollIntoView({ behavior: 'smooth' });
             const button = event.target;
             const originalText = button.innerHTML;
             button.innerHTML = '✅ Movido!';
             button.classList.remove('btn-outline-success');
             button.classList.add('btn-success');
-            
             setTimeout(() => {
                 button.innerHTML = originalText;
                 button.classList.remove('btn-success');
                 button.classList.add('btn-outline-success');
             }, 2000);
         }
-        
-        // Ejemplo de texto para comprimir
         function loadTextExample() {
-            const exampleText = `¡Hola! Este es un ejemplo de texto que será comprimido usando gzip.
-
-Características de gzip:
-- Algoritmo de compresión sin pérdida
-- Muy eficiente para textos repetitivos
-- Ampliamente utilizado en aplicaciones web
-- Reduce significativamente el tamaño de archivos
-
-Este texto contiene suficiente contenido para demostrar la efectividad de la compresión gzip. Notarás que textos más largos y con más repeticiones obtienen mejores ratios de compresión.`;
-            
-            document.getElementById('textInput').value = exampleText;
+            const exampleBase64 = "H4sIAAAAAAAAAzu00CM/J1FRwbW4JFUhtVihNE8hNSs1tyAnXyElVaEktaIkX6GwNFWhOLXo8EKF5PzcgqLM3MyUfIXS4sQ8IJVelVmgBwDXThCfRQAAAA==";
+            document.getElementById('gzipTextInput').value = exampleBase64;
         }
-        
-        // Ejemplo de datos de prueba (números comprimidos)
-        function loadExample() {
-            const exampleData = "31,139,8,0,0,0,0,0,0,3,93,144,49,78,4,49,12,69,251,57,133,57,0,123,0,58,132,144,104,160,224,6,222,196,12,94,37,113,136,147,133,221,219,108,73,65,129,184,1,115,49,156,204,10,33,170,36,142,253,253,254,255,62,221,73,192,11,184,213,74,64,10,45,1,237,40,230,32,224,9,42,189,85,129,151,70,160,84,150,19,56,137,185,112,100,47,208,20,147,29,243,145,243,102,154,110,176,160,171,214,243,161,149,29,106,31,238,95,87,211,37,92,135,89,10,215,56,20,135,2,41,47,95,9,148,19,228,229,189,120,246,104,125,247,237,0,244,196,142,41,25,75,54,197,117,191,66,161,76,149,43,239,69,187,158,209,49,198,209,213,42,7,62,162,129,80,2,180,186,67,199,146,204,200,43,109,173,247,145,124,115,70,207,115,98,147,70,211,56,79,82,128,138,17,151,207,129,133,197,61,15,249,105,4,177,250,118,146,170,193,216,120,251,197,234,53,74,61,128,1,232,41,138,214,130,5,2,26,60,57,91,96,110,124,215,180,202,95,183,35,41,120,144,138,150,164,142,80,207,246,98,127,7,44,179,221,15,125,195,90,89,93,159,237,200,118,160,216,23,237,196,36,161,152,23,209,127,145,110,126,0,97,123,174,65,207,1,0,0";
-            document.getElementById('numbersInput').value = exampleData;
+        function loadTextExampleCompress() {
+            const exampleText = "¡Hola! Este es un ejemplo de texto que será comprimido usando gzip.";
+            document.getElementById('textInput').value = exampleText;
         }
     </script>
 </body>
